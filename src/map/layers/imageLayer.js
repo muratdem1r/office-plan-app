@@ -8,5 +8,6 @@ export const imageLayer = new ImageLayer({
     url: office,
     // image sizes
     imageExtent: [0, 0, 825, 805],
+    floor: 1,
   }),
 });

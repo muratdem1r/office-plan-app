@@ -1,9 +1,12 @@
+.App {
+  padding-top: 3rem;
+}
+
 .map {
   height: 80vh;
   max-width: 805px;
   margin-inline: auto;
   position: relative;
-  margin-top: 3rem;
 }
 
 .ol-popup {
