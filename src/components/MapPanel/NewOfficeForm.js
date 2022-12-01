@@ -1,12 +1,14 @@
-import React, { useState } from "react";
 import { Button, Form, Input, Select, Modal } from "antd";
 
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import { createLayerGroup } from "map/helpers";
 import { newPlan } from "store/actions/mapActions";
 
 function NewOfficeForm({ defaultFloor }) {
   const dispatch = useDispatch();
+
   const floors = useSelector((state) => state.floors);
   const notification = useSelector((state) => state.notification);
 

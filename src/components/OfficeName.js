@@ -1,6 +1,6 @@
-import React from "react";
-import { useSelector } from "react-redux";
 import { Space } from "antd";
+
+import { useSelector } from "react-redux";
 
 function OfficeName() {
   const selectedName = useSelector((state) => state.selectedName);

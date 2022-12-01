@@ -1,14 +1,15 @@
-import React from "react";
-import { Button, Space, Tooltip } from "antd";
-import NewOfficeForm from "./NewOfficeForm";
+import { Button, Space, Collapse } from "antd";
+
 import { useDispatch, useSelector } from "react-redux";
-import { Collapse } from "antd";
-import { addFloor, changeFloor, selectPlan } from "store/actions/mapActions";
+
+import NewOfficeForm from "./NewOfficeForm";
+import { addFloor, selectPlan } from "store/actions/mapActions";
+
 const { Panel } = Collapse;
 
 function MapPanel() {
   const dispatch = useDispatch();
-  const selectedFloor = useSelector((state) => state.selectedFloor);
+
   const floors = useSelector((state) => state.floors);
   const offices = useSelector((state) => state.offices);
 

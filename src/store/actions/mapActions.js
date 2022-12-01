@@ -22,10 +22,13 @@ export const selectPlan = (selectedName) => (dispatch, getState) => {
     if (selectedName === name) {
       return layerGroup;
     }
+    return null;
   });
 
-  newSelected.setVisible(true);
-  dispatch({ type: SELECTED_PLAN, payload: newSelected });
+  if (newSelected) {
+    newSelected.setVisible(true);
+    dispatch({ type: SELECTED_PLAN, payload: newSelected });
+  }
 };
 
 export const newPlan = (layerGroup) => (dispatch, getState) => {

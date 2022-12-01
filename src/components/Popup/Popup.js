@@ -1,6 +1,7 @@
-import DeleteConfirm from "components/Popup/DeleteConfirm";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
+
+import DeleteConfirm from "components/Popup/DeleteConfirm";
 
 function Popup({ popup, popupRef, featureNameRef, featureTitleRef }) {
   const map = useSelector((state) => state.map);

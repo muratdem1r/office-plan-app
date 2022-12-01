@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
-
-import { Select } from "ol/interaction";
-import { useSelector } from "react-redux";
 import { Button, Popconfirm } from "antd";
 
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+
+import { Select } from "ol/interaction";
+
 function DeleteConfirm({ popup }) {
+  const map = useSelector((state) => state.map);
   const selectedVectorLayer = useSelector((state) => state.selectedVectorLayer);
   const selectedLayerGroup = useSelector((state) => state.selectedLayerGroup);
-  const map = useSelector((state) => state.map);
 
   const select = new Select({
     style: null,

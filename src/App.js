@@ -1,14 +1,17 @@
-import "ol/ol.css";
-import "assets/styles/App.css";
-import MapWrapper from "components/MapWrapper";
-import MapPanel from "components/MapPanel/MapPanel";
-import { Col, Row, Space } from "antd";
-import Floor from "components/Floor";
-import OfficeName from "components/OfficeName";
-import { notification } from "antd";
+import { Col, Row, Space, notification } from "antd";
+
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setNotification } from "store/actions/mapActions";
-import { useEffect } from "react";
+
+// Styles
+import "ol/ol.css";
+import "assets/styles/App.css";
+
+// Components
+import MapWrapper from "components/MapWrapper";
+import MapPanel from "components/MapPanel/MapPanel";
+import OfficeName from "components/OfficeName";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,7 +42,6 @@ function App() {
           xl={{ span: 8, offset: 1 }}
           style={{
             marginTop: "3rem",
-            justifyContent: "start",
           }}
         >
           <MapPanel />
