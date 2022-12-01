@@ -21,22 +21,26 @@ function NewOfficeForm({ defaultFloor }) {
   };
 
   const formSubmitHandler = (e) => {
-    const { layerGroup } = createLayerGroup(e.floor, e.name);
+    const layerGroup = createLayerGroup(e.floor, e.name);
 
     const success = dispatch(newPlan(layerGroup));
     if (success) {
-      setIsModalOpen(false);
+      notification.success({
+        message: "Office Added",
+      });
     } else {
       notification.error({
-        message: `Duplicate Office`,
-        description: <p>There is an office with this name.</p>,
+        message: "Duplicate Office",
+        description: "There is an office with this name.",
       });
     }
   };
 
   return (
     <>
-      <Button onClick={showModal}>Create New Office</Button>
+      <Button type="dashed" onClick={showModal}>
+        New
+      </Button>
 
       <Modal
         title="New Office Plan"

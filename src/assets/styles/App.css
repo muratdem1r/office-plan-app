@@ -2,7 +2,7 @@
   padding: 1rem;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1600px) {
   .App {
     padding: 3rem 10rem;
   }
@@ -10,7 +10,7 @@
 
 .map {
   height: 80vh;
-  max-width: 825px;
+  /* max-width: 825px; */
   width: 100%;
   position: relative;
 }
@@ -79,15 +79,17 @@
   float: right;
 }
 
-.floor {
-  background-color: #1677ff;
-  color: white;
-  padding: 0.5rem;
-  font-weight: 500;
-  border-radius: 0.2rem;
+.office-name {
+  text-transform: capitalize;
 }
 
 h1 {
   margin: 0;
   padding: 0;
+}
+
+.map-panel {
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: scroll;
 }

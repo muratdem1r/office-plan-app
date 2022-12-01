@@ -1,7 +1,7 @@
 const initialState = {
   notification: null,
   map: null,
-  names: [],
+  offices: [{}],
   floors: [1, 2, 3, 4],
 
   selectedName: null,
@@ -23,7 +23,7 @@ const mapReducer = (state = initialState, action) => {
 
       return { ...state, floors: [...state.floors, newFloor] };
     case "NEW_PLAN":
-      return { ...state, names: [...state.names, action.payload] };
+      return { ...state, offices: [...state.offices, action.payload] };
     case "SELECTED_PLAN":
       return {
         ...state,

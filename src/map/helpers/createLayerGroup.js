@@ -14,5 +14,5 @@ export const createLayerGroup = (floor, name) => {
     floor: floor,
   });
 
-  return { officeLayer, vectorLayer, layerGroup };
+  return layerGroup;
 };

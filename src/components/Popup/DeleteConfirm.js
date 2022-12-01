@@ -6,6 +6,7 @@ import { Button, Popconfirm } from "antd";
 
 function DeleteConfirm({ popup }) {
   const selectedVectorLayer = useSelector((state) => state.selectedVectorLayer);
+  const selectedLayerGroup = useSelector((state) => state.selectedLayerGroup);
   const map = useSelector((state) => state.map);
 
   const select = new Select({
@@ -16,7 +17,7 @@ function DeleteConfirm({ popup }) {
     if (map) {
       map.addInteraction(select);
     }
-  }, [map]);
+  }, [map, selectedLayerGroup]);
 
   return (
     <Popconfirm

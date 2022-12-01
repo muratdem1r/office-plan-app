@@ -1,4 +1,4 @@
 import { createLayerGroup } from "./createLayerGroup";
-import { createFeature } from "./createFeature";
+import { createAvatarFeature, createPointFeature } from "./createFeature";
 
-export { createLayerGroup, createFeature };
+export { createLayerGroup, createAvatarFeature, createPointFeature };

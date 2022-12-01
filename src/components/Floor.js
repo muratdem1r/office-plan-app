@@ -60,5 +60,3 @@ function Floor() {
     </Space>
   );
 }
-
-export default Floor;

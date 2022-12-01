@@ -11,28 +11,40 @@ export const newMap = (map) => (dispatch) => {
   dispatch({ type: NEW_MAP, payload: map });
 };
 
-export const selectPlan = (layerGroup) => (dispatch, getState) => {
+export const selectPlan = (selectedName) => (dispatch, getState) => {
   getState().selectedLayerGroup?.setVisible(false);
-  layerGroup.setVisible(true);
-  dispatch({ type: SELECTED_PLAN, payload: layerGroup });
+
+  const allLayerGroups = getState().map?.getLayers().array_;
+
+  const newSelected = allLayerGroups.find((layerGroup) => {
+    const name = layerGroup.get("name");
+
+    if (selectedName === name) {
+      return layerGroup;
+    }
+  });
+
+  newSelected.setVisible(true);
+  dispatch({ type: SELECTED_PLAN, payload: newSelected });
 };
 
 export const newPlan = (layerGroup) => (dispatch, getState) => {
   let isUnique = true;
 
   const name = layerGroup.get("name");
+  const floor = layerGroup.get("floor");
 
-  getState().names.forEach((value) => {
-    if (value === name) {
+  getState().offices.forEach((office) => {
+    if (office.name === name) {
       isUnique = false;
     }
   });
   if (isUnique) {
-    dispatch({ type: NEW_PLAN, payload: name });
+    dispatch({ type: NEW_PLAN, payload: { name, floor } });
 
     getState().map.addLayer(layerGroup);
 
-    dispatch(selectPlan(layerGroup));
+    dispatch(selectPlan(name));
 
     return true;
   } else {

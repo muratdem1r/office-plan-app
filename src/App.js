@@ -22,8 +22,8 @@ function App() {
   return (
     <div className="App">
       {infoHolder}
-      <Row>
-        <Col span={24} md={16}>
+      <Row justify="center">
+        <Col span={24} xl={12}>
           <Space
             direction="vertical"
             style={{
@@ -32,13 +32,15 @@ function App() {
           >
             <OfficeName />
             <MapWrapper />
-            <Floor />
           </Space>
         </Col>
         <Col
           span={24}
-          md={8}
-          style={{ paddingLeft: "3rem", marginTop: "3rem" }}
+          xl={{ span: 8, offset: 1 }}
+          style={{
+            marginTop: "3rem",
+            justifyContent: "start",
+          }}
         >
           <MapPanel />
         </Col>

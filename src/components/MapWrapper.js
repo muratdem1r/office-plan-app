@@ -7,13 +7,13 @@ import View from "ol/View";
 import Overlay from "ol/Overlay";
 import { getCenter } from "ol/extent";
 
-import { createFeature, createLayerGroup } from "map/helpers";
+import { createAvatarFeature, createLayerGroup } from "map/helpers";
 
 import members from "constants/members";
 import Popup from "./Popup/Popup";
 import { mapSingleClick } from "map/listeners/singleclick";
 import { mapPointerMove } from "map/listeners/pointermove";
-import { newMap, newPlan } from "store/actions/mapActions";
+import { newMap, newPlan, selectPlan } from "store/actions/mapActions";
 
 function MapWrapper() {
   const dispatch = useDispatch();
@@ -29,12 +29,14 @@ function MapWrapper() {
   });
 
   // Create default layers
-  const { layerGroup } = createLayerGroup(1, "mahrek");
+  const layerGroup = createLayerGroup(1, "mahrek");
+  const ortem = createLayerGroup(1, "ortem");
+  const militera = createLayerGroup(2, "militera");
 
   // ADD FEATURES TO FIRST MAP
   members.forEach((member) => {
     const { coords, image, name, title } = member;
-    const newFeature = createFeature(coords, image, name, title);
+    const newFeature = createAvatarFeature(coords, image, name, title);
 
     layerGroup.getLayers().item(1).getSource().addFeature(newFeature);
   });
@@ -57,6 +59,8 @@ function MapWrapper() {
     );
 
     dispatch(newPlan(layerGroup));
+    dispatch(newPlan(ortem));
+    dispatch(newPlan(militera));
   }, [dispatch]);
 
   // MAP IS READY
@@ -66,7 +70,7 @@ function MapWrapper() {
       mapSingleClick(map, popup, featureNameRef, featureTitleRef);
       mapPointerMove(map);
     }
-  }, [map]);
+  }, [map, selectedLayerGroup]);
 
   return (
     <div>
