@@ -8,14 +8,14 @@ function OfficeName() {
   return (
     <>
       <Space>
-        <h1 style={{ color: "black" }}>{selectedName}</h1>
+        <h1 className="office-name">{selectedName}</h1>
         <span
           style={{
             fontSize: "1.5rem",
             fontWeight: "normal",
           }}
         >
-          office plan
+          ofis planı
         </span>
       </Space>
     </>

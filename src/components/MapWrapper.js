@@ -61,6 +61,7 @@ function MapWrapper() {
     dispatch(newPlan(layerGroup));
     dispatch(newPlan(ortem));
     dispatch(newPlan(militera));
+    dispatch(selectPlan("mahrek"));
   }, [dispatch]);
 
   // MAP IS READY

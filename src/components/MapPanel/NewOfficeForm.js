@@ -26,12 +26,12 @@ function NewOfficeForm({ defaultFloor }) {
     const success = dispatch(newPlan(layerGroup));
     if (success) {
       notification.success({
-        message: "Office Added",
+        message: "Ofis başarıyla eklendi.",
       });
     } else {
       notification.error({
-        message: "Duplicate Office",
-        description: "There is an office with this name.",
+        message: "Ofis mevcut",
+        description: "Bu isimde bir ofis mevcut.",
       });
     }
   };
@@ -39,11 +39,11 @@ function NewOfficeForm({ defaultFloor }) {
   return (
     <>
       <Button type="dashed" onClick={showModal}>
-        New
+        Yeni
       </Button>
 
       <Modal
-        title="New Office Plan"
+        title="Yeni Ofis Planı"
         open={isModalOpen}
         footer={null}
         onCancel={handleCancel}
@@ -71,10 +71,13 @@ function NewOfficeForm({ defaultFloor }) {
           ]}
           size="large"
           onFinish={formSubmitHandler}
+          validateMessages={{
+            required: "Zorunlu alan.",
+          }}
         >
           <Form.Item
             name="name"
-            label="Office Name"
+            label="Ofis Adı"
             rules={[
               {
                 required: true,
@@ -85,7 +88,7 @@ function NewOfficeForm({ defaultFloor }) {
           </Form.Item>
           <Form.Item
             name="floor"
-            label="Floor"
+            label="Kat"
             rules={[
               {
                 required: true,
@@ -107,7 +110,7 @@ function NewOfficeForm({ defaultFloor }) {
             }}
           >
             <Button type="primary" htmlType="submit">
-              Add Office Plan
+              Ofis Planı Ekle
             </Button>
           </Form.Item>
         </Form>

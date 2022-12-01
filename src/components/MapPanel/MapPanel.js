@@ -49,7 +49,7 @@ function MapPanel() {
         })}
       </Collapse>
       <Button onClick={addFloorHandler} type="dashed">
-        New Floor
+        Yeni Kat
       </Button>
     </Space>
   );
