@@ -36,11 +36,7 @@ function DeleteConfirm({ popup }) {
       onCancel={() => {}}
       okText="Evet"
       cancelText="Hayır"
-    >
-      <Button className="fireButton" type="primary" danger>
-        KOV
-      </Button>
-    </Popconfirm>
+    ></Popconfirm>
   );
 }
 

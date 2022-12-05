@@ -8,6 +8,8 @@ import Map from "ol/Map";
 
 import { addPlan, newMap } from "store/actions/mapActions";
 import { createLayerGroup } from "map/helpers/LayerGroup/createLayerGroup";
+import members from "constants/members";
+import { createAvatarFeature } from "map/helpers/createFeature";
 
 const { layerGroup, extent } = createLayerGroup({
   width: 825,
@@ -30,6 +32,14 @@ function useCreateMap(mapRef) {
 
     //default plan
     dispatch(addPlan({ layerGroup, extent, name: "mahrek", floor: "1" }));
+
+    // ADD FEATURES TO FIRST MAP
+    members.forEach((member) => {
+      const { coords, image, name, title } = member;
+      const newFeature = createAvatarFeature(coords, image, name, title);
+
+      layerGroup.getLayers().item(1).getSource().addFeature(newFeature);
+    });
   }, []);
 
   return;
