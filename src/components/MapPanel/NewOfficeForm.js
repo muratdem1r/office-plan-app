@@ -1,18 +1,23 @@
-import { Button, Form, Input, Select, Modal } from "antd";
+import { Button, Form, Input, Select, Modal, Upload, message } from "antd";
 
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { createLayerGroup } from "map/helpers";
-import { newPlan } from "store/actions/mapActions";
+import { createLayerGroup } from "map/helpers/LayerGroup/createLayerGroup";
+import { addPlan } from "store/actions/mapActions";
+import { getBase64 } from "map/helpers/getBase64";
 
-function NewOfficeForm({ defaultFloor }) {
+function NewOfficeForm() {
   const dispatch = useDispatch();
 
-  const floors = useSelector((state) => state.floors);
-  const notification = useSelector((state) => state.notification);
+  const { treeData, notification } = useSelector((state) => state);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageList, setImageList] = useState([]);
+  const [imageInfos, setImageInfos] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -22,26 +27,69 @@ function NewOfficeForm({ defaultFloor }) {
     setIsModalOpen(false);
   };
 
-  const formSubmitHandler = (e) => {
-    const layerGroup = createLayerGroup(e.floor, e.name);
+  const formSubmitHandler = ({ name, floor }) => {
+    const { layerGroup, extent } = createLayerGroup(imageInfos);
 
-    const success = dispatch(newPlan(layerGroup));
-    if (success) {
+    const error = dispatch(addPlan({ layerGroup, extent, name, floor }));
+
+    if (!error) {
       notification.success({
         message: "Ofis başarıyla eklendi.",
       });
+      setIsModalOpen(false);
     } else {
+      console.log(error);
       notification.error({
-        message: "Ofis mevcut",
-        description: "Bu isimde bir ofis mevcut.",
+        message: "Hata",
+        description: "Ofis eklenirken bir hata meydana geldi.",
       });
+    }
+  };
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+
+  const handlePreviewCancel = () => setPreviewOpen(false);
+
+  const onChange = async ({ fileList, file }) => {
+    if (file.type.includes("image/")) {
+      if (file instanceof File) {
+        const fr = new FileReader();
+
+        fr.onload = () => {
+          const img = new Image();
+
+          img.onload = () => {
+            setImageInfos({
+              width: img.width,
+              height: img.height,
+              src: img.src,
+            });
+          };
+          img.src = fr.result;
+        };
+        fr.readAsDataURL(file);
+      }
+
+      setImageList(fileList);
+    } else {
+      setImageList([]);
+      message.error(<span>Lütfen bir resim yükleyin.</span>);
     }
   };
 
   return (
     <>
       <Button type="dashed" onClick={showModal}>
-        Yeni
+        Yeni Ofis
       </Button>
 
       <Modal
@@ -61,16 +109,6 @@ function NewOfficeForm({ defaultFloor }) {
           initialValues={{
             size: "large",
           }}
-          fields={[
-            {
-              name: ["floor"],
-              value: defaultFloor,
-            },
-            {
-              name: ["name"],
-              value: undefined,
-            },
-          ]}
           size="large"
           onFinish={formSubmitHandler}
           validateMessages={{
@@ -79,7 +117,7 @@ function NewOfficeForm({ defaultFloor }) {
         >
           <Form.Item
             name="name"
-            label="Ofis Adı"
+            label="Firma Adı"
             rules={[
               {
                 required: true,
@@ -98,12 +136,33 @@ function NewOfficeForm({ defaultFloor }) {
             ]}
           >
             <Select>
-              {floors.map((floor) => (
-                <Select.Option key={floor} value={floor}>
-                  {floor}
+              {treeData.map((floor) => (
+                <Select.Option key={floor.key} value={floor.key}>
+                  {floor.key}
                 </Select.Option>
               ))}
             </Select>
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            name="image"
+            label="Kroki"
+          >
+            <Upload
+              accept="image/*"
+              multiple={false}
+              listType="picture-card"
+              fileList={imageList}
+              onPreview={handlePreview}
+              onChange={onChange}
+              beforeUpload={() => false}
+            >
+              {imageList.length < 1 && "+ Yükle"}
+            </Upload>
           </Form.Item>
           <Form.Item
             wrapperCol={{
@@ -116,6 +175,20 @@ function NewOfficeForm({ defaultFloor }) {
             </Button>
           </Form.Item>
         </Form>
+        <Modal
+          open={previewOpen}
+          title={previewTitle}
+          footer={null}
+          onCancel={handlePreviewCancel}
+        >
+          <img
+            alt="example"
+            style={{
+              width: "100%",
+            }}
+            src={previewImage}
+          />
+        </Modal>
       </Modal>
     </>
   );

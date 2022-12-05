@@ -3,16 +3,17 @@ import LayerGroup from "ol/layer/Group";
 import { createOfficeLayer } from "./createOfficeLayer";
 import { createVectorLayer } from "./createVectorLayer";
 
-export const createLayerGroup = (floor, name) => {
-  const officeLayer = createOfficeLayer();
+export const createLayerGroup = (imageInfos) => {
+  const { width, height, src } = imageInfos;
+  const extent = [0, 0, width, height];
+
+  const officeLayer = createOfficeLayer(extent, src);
   const vectorLayer = createVectorLayer();
 
   const layerGroup = new LayerGroup({
     layers: [officeLayer, vectorLayer],
-    visible: false,
-    name: name,
-    floor: floor,
+    visible: true,
   });
 
-  return layerGroup;
+  return { layerGroup, extent };
 };

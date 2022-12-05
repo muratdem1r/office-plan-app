@@ -1,58 +1,52 @@
-import { Button, Space, Collapse } from "antd";
-
+import { Button, Space, Tree } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import NewOfficeForm from "./NewOfficeForm";
-import { addFloor, selectPlan } from "store/actions/mapActions";
 
-const { Panel } = Collapse;
+import { addFloor, changeName } from "store/actions/mapActions";
+import { findObj } from "map/helpers/findObj";
+import { createView } from "map/helpers/createView";
 
 function MapPanel() {
   const dispatch = useDispatch();
+  const { treeData, map } = useSelector((state) => state);
 
-  const floors = useSelector((state) => state.floors);
-  const offices = useSelector((state) => state.offices);
+  const onSelect = (selectedKeys) => {
+    if (selectedKeys[0]?.length === 3) {
+      const key = selectedKeys[0];
 
-  const changeOfficeHandler = (officeName) => {
-    dispatch(selectPlan(officeName));
-  };
-
-  const addFloorHandler = () => {
-    dispatch(addFloor());
+      const { layerGroup, extent, name } = findObj(treeData, key);
+      if (layerGroup) {
+        map.getLayers().forEach((layer) => {
+          layer.setVisible(false);
+        });
+        layerGroup.setVisible(true);
+        map.setView(createView(extent));
+        dispatch(changeName(name));
+      }
+    }
   };
 
   return (
-    <Space direction="vertical" className="map-panel" style={{ width: "100%" }}>
-      <Collapse defaultActiveKey={["1"]}>
-        {floors.map((floor) => {
-          return (
-            <Panel key={floor} header={`Kat ${floor}`}>
-              <Space direction="vertical">
-                {offices.map((office) => {
-                  if (office.floor === floor) {
-                    return (
-                      <Button
-                        className="office-name"
-                        type="text"
-                        key={office.name}
-                        value={office.name}
-                        onClick={() => changeOfficeHandler(office.name)}
-                      >
-                        {office.name}
-                      </Button>
-                    );
-                  }
-                })}
-                <NewOfficeForm defaultFloor={floor} />
-              </Space>
-            </Panel>
-          );
-        })}
-      </Collapse>
-      <Button onClick={addFloorHandler} type="dashed">
-        Yeni Kat
-      </Button>
-    </Space>
+    <div className="map-panel">
+      <Tree
+        showLine={true}
+        defaultExpandedKeys={["1.1"]}
+        onSelect={onSelect}
+        treeData={treeData}
+      />
+      <Space direction="vertical">
+        <Button
+          type="dashed"
+          onClick={() => {
+            dispatch(addFloor());
+          }}
+        >
+          Yeni Kat
+        </Button>
+        <NewOfficeForm />
+      </Space>
+    </div>
   );
 }
 

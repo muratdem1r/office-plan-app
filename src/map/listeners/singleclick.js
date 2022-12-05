@@ -1,4 +1,4 @@
-import { createPointFeature } from "map/helpers";
+import { createPointFeature } from "map/helpers/createFeature";
 
 export const mapSingleClick = (map, popup, featureNameRef, featureTitleRef) => {
   map.on("singleclick", (e) => {

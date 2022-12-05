@@ -1,4 +1,4 @@
-import { Col, Row, Space, notification } from "antd";
+import { notification } from "antd";
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -25,28 +25,9 @@ function App() {
   return (
     <div className="App">
       {infoHolder}
-      <Row justify="center">
-        <Col span={24} xl={12}>
-          <Space
-            direction="vertical"
-            style={{
-              width: "100%",
-            }}
-          >
-            <OfficeName />
-            <MapWrapper />
-          </Space>
-        </Col>
-        <Col
-          span={24}
-          xl={{ span: 8, offset: 1 }}
-          style={{
-            marginTop: "3rem",
-          }}
-        >
-          <MapPanel />
-        </Col>
-      </Row>
+      <OfficeName />
+      <MapWrapper />
+      <MapPanel />
     </div>
   );
 }

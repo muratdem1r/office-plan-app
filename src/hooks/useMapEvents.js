@@ -6,7 +6,6 @@ import { mapPointerMove } from "map/listeners/pointermove";
 
 function useMapEvents(popup, featureNameRef, featureTitleRef) {
   const map = useSelector((state) => state.map);
-  const selectedLayerGroup = useSelector((state) => state.selectedLayerGroup);
 
   useEffect(() => {
     if (map) {
@@ -14,7 +13,7 @@ function useMapEvents(popup, featureNameRef, featureTitleRef) {
       mapSingleClick(map, popup, featureNameRef, featureTitleRef);
       mapPointerMove(map);
     }
-  }, [map, selectedLayerGroup]);
+  }, [map]);
 
   return;
 }
