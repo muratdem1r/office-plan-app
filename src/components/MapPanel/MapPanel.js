@@ -31,7 +31,7 @@ function MapPanel() {
     <div className="map-panel">
       <Tree
         showLine={true}
-        defaultExpandedKeys={["1.1"]}
+        defaultExpandAll
         onSelect={onSelect}
         treeData={treeData}
       />
