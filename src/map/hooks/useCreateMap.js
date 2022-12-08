@@ -54,12 +54,12 @@ function useCreateMap(mapRef) {
       })
     );
 
-    // ADD FEATURES TO FIRST MAP
+    //ADD FEATURES TO FIRST MAP
     // members.forEach((member) => {
     //   const { coords, image, name, title } = member;
     //   const newFeature = createAvatarFeature(coords, image, name, title);
 
-    //   layerGroup.getLayers().item(1).getSource().addFeature(newFeature);
+    //   plan1.layerGroup.getLayers().item(1).getSource().addFeature(newFeature);
     // });
   }, []);
 

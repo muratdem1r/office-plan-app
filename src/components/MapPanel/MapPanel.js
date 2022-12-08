@@ -1,15 +1,9 @@
-import { Button, Space, Tree } from "antd";
+import { Space, Tree } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import NewOfficeForm from "./NewOfficeForm";
 
-import {
-  changeName,
-  changePlan,
-  changeSelectedVectorLayer,
-} from "store/actions/mapActions";
-import { findObj } from "map/helpers/findObj";
-import { createView } from "map/helpers/createView";
+import { changePlan } from "store/actions/mapActions";
 import NewFloorButton from "./NewFloorButton";
 
 import styles from "./MapPanel.module.css";

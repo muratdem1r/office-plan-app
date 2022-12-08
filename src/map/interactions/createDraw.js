@@ -1,4 +1,4 @@
-import Draw, { createBox, createRegularPolygon } from "ol/interaction/Draw";
+import Draw, { createRegularPolygon } from "ol/interaction/Draw";
 
 export const createDraw = (layerGroup, type = "Circle") => {
   // VectorLayer source

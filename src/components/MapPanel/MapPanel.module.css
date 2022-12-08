@@ -1,8 +1,9 @@
 .map_panel {
     position: absolute;
     top: 20%;
-    right: 5%;
-    padding: 1rem;
-    background-color: white;
+    right: 3%;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: white;
 }

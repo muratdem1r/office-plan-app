@@ -35,7 +35,7 @@ export const createAvatarFeature = (coords, image, name, title) => {
         crossOrigin: "anonymous",
         src: image,
       }),
-      zIndex: 100,
+      zIndex: 1,
     })
   );
   return feature;
