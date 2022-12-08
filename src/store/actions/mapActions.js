@@ -51,7 +51,7 @@ export const addPlan =
           }
 
           // New Office Plan
-          const newTitle = `Ofis ${newKey}`;
+          const newTitle = `${name} ${newKey}`;
           const newNode = {
             title: newTitle,
             key: newKey,
