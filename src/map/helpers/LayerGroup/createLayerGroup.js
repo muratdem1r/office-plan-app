@@ -12,7 +12,7 @@ export const createLayerGroup = (imageInfos) => {
 
   const layerGroup = new LayerGroup({
     layers: [officeLayer, vectorLayer],
-    visible: true,
+    visible: false,
   });
 
   return { layerGroup, extent };

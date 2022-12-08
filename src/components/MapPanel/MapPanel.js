@@ -3,9 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 import NewOfficeForm from "./NewOfficeForm";
 
-import { addFloor, changeName } from "store/actions/mapActions";
+import {
+  changeName,
+  changePlan,
+  changeSelectedVectorLayer,
+} from "store/actions/mapActions";
 import { findObj } from "map/helpers/findObj";
 import { createView } from "map/helpers/createView";
+import NewFloorButton from "./NewFloorButton";
+
+import styles from "./MapPanel.module.css";
 
 function MapPanel() {
   const dispatch = useDispatch();
@@ -15,20 +22,12 @@ function MapPanel() {
     if (selectedKeys[0]?.length === 3) {
       const key = selectedKeys[0];
 
-      const { layerGroup, extent, name } = findObj(treeData, key);
-      if (layerGroup) {
-        map.getLayers().forEach((layer) => {
-          layer.setVisible(false);
-        });
-        layerGroup.setVisible(true);
-        map.setView(createView(extent));
-        dispatch(changeName(name));
-      }
+      dispatch(changePlan(key));
     }
   };
 
   return (
-    <div className="map-panel">
+    <div className={styles.map_panel}>
       <Tree
         showLine={true}
         defaultExpandAll
@@ -36,14 +35,7 @@ function MapPanel() {
         treeData={treeData}
       />
       <Space direction="vertical">
-        <Button
-          type="dashed"
-          onClick={() => {
-            dispatch(addFloor());
-          }}
-        >
-          Yeni Kat
-        </Button>
+        <NewFloorButton />
         <NewOfficeForm />
       </Space>
     </div>

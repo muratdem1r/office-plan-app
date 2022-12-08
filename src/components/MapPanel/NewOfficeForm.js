@@ -181,13 +181,7 @@ function NewOfficeForm() {
           footer={null}
           onCancel={handlePreviewCancel}
         >
-          <img
-            alt="example"
-            style={{
-              width: "100%",
-            }}
-            src={previewImage}
-          />
+          <img alt="example" src={previewImage} />
         </Modal>
       </Modal>
     </>

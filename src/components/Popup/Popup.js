@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 
 import DeleteConfirm from "components/Popup/DeleteConfirm";
 
+import styles from "./Popup.module.css";
+
 function Popup({ popup, popupRef, featureNameRef, featureTitleRef }) {
   const map = useSelector((state) => state.map);
 
@@ -13,22 +15,22 @@ function Popup({ popup, popupRef, featureNameRef, featureTitleRef }) {
   }, [map, popup]);
 
   return (
-    <div ref={popupRef} className="ol-popup">
+    <div ref={popupRef} className={styles.ol_popup}>
       <button
         onClick={() => {
           popup.setPosition(undefined);
         }}
-        className="ol-popup-closer"
+        className={styles.ol_popup_closer}
       ></button>
-      <div className="popup-content">
+      <div className={styles.popup_content}>
         <span
-          className="overlay-text"
-          id="feature-name"
+          className={styles.overlay_text}
+          id={styles.feature_name}
           ref={featureNameRef}
         ></span>
         <span
-          className="overlay-text"
-          id="feature-title"
+          className={styles.overlay_text}
+          id={styles.feature_title}
           ref={featureTitleRef}
         ></span>
       </div>

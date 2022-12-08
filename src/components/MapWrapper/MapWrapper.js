@@ -1,13 +1,15 @@
 import { useRef } from "react";
 
-import Popup from "./Popup/Popup";
+import Popup from "../Popup/Popup";
 
 // Openlayers
 import Overlay from "ol/Overlay";
 
 // Custom Hooks
-import useCreateMap from "hooks/useCreateMap";
-import useMapEvents from "hooks/useMapEvents";
+import useCreateMap from "map/hooks/useCreateMap";
+import useMapEvents from "map/hooks/useMapEvents";
+
+import styles from "./MapWrapper.module.css";
 
 function MapWrapper() {
   const mapRef = useRef();
@@ -24,7 +26,7 @@ function MapWrapper() {
 
   return (
     <div>
-      <div ref={mapRef} className="map"></div>
+      <div ref={mapRef} className={styles.map}></div>
       <Popup
         popup={popup}
         popupRef={popupRef}

@@ -7,7 +7,9 @@ export const mapSingleClick = (map, popup, featureNameRef, featureTitleRef) => {
     const hasFeature = map.hasFeatureAtPixel(e.pixel);
 
     if (hasFeature) {
+      console.log("feature found");
       map.forEachFeatureAtPixel(e.pixel, (feature) => {
+        console.log(feature);
         featureNameRef.current.innerHTML = feature.get("name") + "<br>";
         featureTitleRef.current.innerHTML = feature.get("title");
 

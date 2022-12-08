@@ -13,7 +13,7 @@ export const createView = (extent) => {
     // center by image sizes
     projection: projection,
     center: getCenter(extent),
-    zoom: 2,
+    zoom: 3,
     maxZoom: 8,
   });
 };

@@ -9,9 +9,10 @@ import "ol/ol.css";
 import "assets/styles/App.css";
 
 // Components
-import MapWrapper from "components/MapWrapper";
+import MapWrapper from "components/MapWrapper/MapWrapper";
 import MapPanel from "components/MapPanel/MapPanel";
-import OfficeName from "components/OfficeName";
+import OfficeName from "components/OfficeName/OfficeName";
+import Controllers from "components/Controllers/Controllers";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ function App() {
     <div className="App">
       {infoHolder}
       <OfficeName />
+      <Controllers />
       <MapWrapper />
       <MapPanel />
     </div>

@@ -1,0 +1,18 @@
+.name {
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    z-index: 1;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    letter-spacing: 3px;
+    color: black;
+    text-transform: uppercase;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.name span {
+    text-transform: capitalize;
+    font-size: 1.5rem;
+    font-weight: normal;
+}
