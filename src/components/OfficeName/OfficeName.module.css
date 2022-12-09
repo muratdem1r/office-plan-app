@@ -9,6 +9,8 @@
     color: black;
     text-transform: uppercase;
     background-color: rgba(255, 255, 255, 0.8);
+
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .name span {
