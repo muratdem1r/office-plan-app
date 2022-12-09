@@ -3,9 +3,12 @@ import { Button, Form, Input, Select, Modal, Upload, message } from "antd";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+// Helpers
 import { createLayerGroup } from "map/helpers/LayerGroup/createLayerGroup";
-import { addPlan } from "store/actions/mapActions";
 import { getBase64 } from "map/helpers/getBase64";
+
+// Actions
+import { addPlan } from "store/actions/mapActions";
 
 function NewOfficeForm() {
   const dispatch = useDispatch();

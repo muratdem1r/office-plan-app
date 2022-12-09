@@ -1,5 +1,7 @@
+// Openlayers
 import LayerGroup from "ol/layer/Group";
 
+// Helpers
 import { createOfficeLayer } from "./createOfficeLayer";
 import { createVectorLayer } from "./createVectorLayer";
 

@@ -1,11 +1,14 @@
-import { createView } from "map/helpers/createView";
-import { findObj } from "map/helpers/findObj";
+// Types
 import {
   SET_MAP,
   UPDATE_TREE,
   SET_KEY,
   SET_NOTIFICATION,
 } from "store/types/mapTypes";
+
+// Helpers
+import { createView } from "map/helpers/createView";
+import { findObj } from "map/helpers/findObj";
 
 export const newMap = (map) => (dispatch) => {
   dispatch({ type: SET_MAP, payload: map });

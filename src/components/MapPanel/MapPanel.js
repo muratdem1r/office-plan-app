@@ -1,16 +1,18 @@
 import { Space, Tree } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
-import NewOfficeForm from "./NewOfficeForm";
-
-import { changePlan } from "store/actions/mapActions";
-import NewFloorButton from "./NewFloorButton";
-
 import styles from "./MapPanel.module.css";
+
+// Actions
+import { changePlan } from "store/actions/mapActions";
+
+// Components
+import NewOfficeForm from "./NewOfficeForm";
+import NewFloorButton from "./NewFloorButton";
 
 function MapPanel() {
   const dispatch = useDispatch();
-  const { treeData, map } = useSelector((state) => state);
+  const { treeData } = useSelector((state) => state);
 
   const onSelect = (selectedKeys) => {
     if (selectedKeys[0]?.length === 3) {

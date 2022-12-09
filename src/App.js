@@ -1,21 +1,24 @@
 import { notification } from "antd";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setNotification } from "store/actions/mapActions";
 
 // Styles
 import "ol/ol.css";
 import "assets/styles/App.css";
+
+// Actions
+import { setNotification } from "store/actions/mapActions";
+
+// Openlayers
+import Overlay from "ol/Overlay";
+import Popup from "components/Popup/Popup";
 
 // Components
 import MapWrapper from "components/MapWrapper/MapWrapper";
 import MapPanel from "components/MapPanel/MapPanel";
 import OfficeName from "components/OfficeName/OfficeName";
 import Controllers from "components/Controllers/Controllers";
-import { useRef } from "react";
-import Overlay from "ol/Overlay";
-import Popup from "components/Popup/Popup";
 
 const popup = new Overlay({});
 
@@ -49,7 +52,11 @@ function App() {
         featureNameRef={featureNameRef}
         featureTitleRef={featureTitleRef}
       />
-      <MapWrapper />
+      <MapWrapper
+        popup={popup}
+        featureNameRef={featureNameRef}
+        featureTitleRef={featureTitleRef}
+      />
       <MapPanel />
     </div>
   );

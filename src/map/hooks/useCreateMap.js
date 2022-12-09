@@ -1,16 +1,22 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+// Images
 import img from "assets/images/office.png";
 import img2 from "assets/images/office2.jpg";
 
 // Openlayers
 import Map from "ol/Map";
 
+// Actions
 import { addPlan, newMap } from "store/actions/mapActions";
+
+// Helpers
 import { createLayerGroup } from "map/helpers/LayerGroup/createLayerGroup";
-import members from "constants/members";
 import { createAvatarFeature } from "map/helpers/createFeature";
+
+// Contants
+import members from "constants/members";
 
 const plan1 = createLayerGroup({
   width: 825,
@@ -55,12 +61,12 @@ function useCreateMap(mapRef) {
     );
 
     //ADD FEATURES TO FIRST MAP
-    // members.forEach((member) => {
-    //   const { coords, image, name, title } = member;
-    //   const newFeature = createAvatarFeature(coords, image, name, title);
+    members.forEach((member) => {
+      const { coords, image, name, title } = member;
+      const newFeature = createAvatarFeature(coords, image, name, title);
 
-    //   plan1.layerGroup.getLayers().item(1).getSource().addFeature(newFeature);
-    // });
+      plan1.layerGroup.getLayers().item(1).getSource().addFeature(newFeature);
+    });
   }, []);
 
   return;

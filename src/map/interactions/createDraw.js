@@ -1,3 +1,4 @@
+// Openlayers
 import Draw, { createRegularPolygon } from "ol/interaction/Draw";
 
 export const createDraw = (layerGroup, type = "Circle") => {

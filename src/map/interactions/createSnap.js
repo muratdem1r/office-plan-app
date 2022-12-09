@@ -1,3 +1,4 @@
+// Openlayers
 import { Snap } from "ol/interaction";
 
 export const createSnap = (layerGroup) => {
