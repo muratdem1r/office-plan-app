@@ -227,6 +227,7 @@ function Controllers() {
       map.removeInteraction(translateInteraction);
       setType(null);
     }
+    // eslint-disable-next-line
   }, [selectedOfficeKey]);
 
   return (

@@ -32,12 +32,13 @@ function App() {
     // save antd notification to redux
     dispatch(setNotification(info));
     popup.setElement(popupRef.current);
+    // eslint-disable-next-line
   }, []);
 
   return (
     <div className="App">
       {infoHolder}
-      <Popup popup={popup} popupRef={popupRef} />
+      <Popup popupRef={popupRef} />
       <OfficeName />
       <Controllers />
       <MapWrapper popup={popup} popupRef={popupRef} />
