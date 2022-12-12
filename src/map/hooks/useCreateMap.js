@@ -18,6 +18,9 @@ import { createAvatarFeature } from "map/helpers/createFeature";
 // Contants
 import members from "constants/members";
 
+// Listeners
+import { mapPointerMove } from "map/listeners/pointermove";
+
 const plan1 = createLayerGroup({
   width: 825,
   height: 805,
@@ -29,19 +32,21 @@ const plan2 = createLayerGroup({
   src: img2,
 });
 
-function useCreateMap(mapRef) {
+function useCreateMap({ mapRef, popup, popupRef }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      newMap(
-        new Map({
-          target: mapRef.current,
-          controls: [],
-        })
-      )
-    );
+    const map = new Map({
+      target: mapRef.current,
+      controls: [],
+    });
 
+    dispatch(newMap(map));
+
+    // Map Event Listeners
+    mapPointerMove({ map, popup, popupRef });
+
+    // Default map plans
     dispatch(
       addPlan({
         layerGroup: plan2.layerGroup,
@@ -50,7 +55,6 @@ function useCreateMap(mapRef) {
         floor: "2",
       })
     );
-    //default plan
     dispatch(
       addPlan({
         layerGroup: plan1.layerGroup,
@@ -60,7 +64,7 @@ function useCreateMap(mapRef) {
       })
     );
 
-    //ADD FEATURES TO FIRST MAP
+    // Add features to plan1
     members.forEach((member) => {
       const { coords, image, name, title } = member;
       const newFeature = createAvatarFeature(coords, image, name, title);
