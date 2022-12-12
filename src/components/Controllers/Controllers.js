@@ -16,9 +16,10 @@ import {
   UserAddOutlined,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
+import { RxCursorArrow, RxHand } from "react-icons/rx";
 
 import styles from "./Controllers.module.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { createDraw } from "map/interactions/createDraw";
@@ -34,6 +35,7 @@ import { Fill, Stroke, Circle, Style } from "ol/style";
 
 import { RgbaStringColorPicker } from "react-colorful";
 import { Point } from "ol/geom";
+import clearInteractions from "map/helpers/clearInteractions";
 
 function Controllers() {
   const dispatch = useDispatch();
@@ -43,16 +45,32 @@ function Controllers() {
   const [type, setType] = useState("Cursor");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastFeature, setLastFeature] = useState(null);
-  const [drawInteraction, setDrawInteraction] = useState(null);
-  const [snapInteraction, setSnapInteraction] = useState(null);
-  const [modifyInteraction, setModifyInteraction] = useState(null);
-  const [selectInteraction, setSelectInteraction] = useState(null);
-  const [translateInteraction, setTranslateInteraction] = useState(null);
+
+  const [interactions, setInteractions] = useState([]);
+
   const [color, setColor] = useState("#ffcc33");
+  const skipFirstColorChange = useRef(true);
+
+  const pointStyle = new Style({
+    image: new Circle({
+      radius: 7,
+      fill: new Fill({ color }),
+      zIndex: 1,
+    }),
+  });
+
+  const showStyle = new Style({
+    fill: new Fill({ color }),
+    zIndex: 2,
+  });
+
+  const transparentStyle = new Style({
+    fill: new Fill({ color: "rgba(0,0,0,0.5)" }),
+    stroke: new Stroke({ color }),
+    zIndex: 2,
+  });
 
   const formSubmitHandler = ({ name, title }) => {
-    console.log(lastFeature);
-
     lastFeature.set("name", name);
     lastFeature.set("title", title);
 
@@ -65,48 +83,6 @@ function Controllers() {
     setIsModalOpen(false);
   };
 
-  const colorChangeHandler = (value) => {
-    setColor(value);
-    if (type === "Point") {
-      drawInteraction?.on("drawstart", (e) => {
-        e.feature.setStyle(
-          new Style({
-            image: new Circle({
-              radius: 7,
-              fill: new Fill({ color }),
-              zIndex: 1,
-            }),
-          })
-        );
-      });
-    } else {
-      drawInteraction?.on("drawstart", (e) => {
-        // SAVE styles for select interaction
-        e.feature.set(
-          "showStyle",
-          new Style({
-            fill: new Fill({ color: value }),
-            zIndex: 2,
-          })
-        );
-        e.feature.set(
-          "transparentStyle",
-          new Style({
-            fill: new Fill({ color: "rgba(0,0,0,0.5)" }),
-            stroke: new Stroke({ color: value }),
-            zIndex: 2,
-          })
-        );
-        e.feature.setStyle(e.feature.get("showStyle"));
-      });
-      drawInteraction?.on("drawend", (e) => {
-        // DEFAULT style
-        e.feature.set("style", e.feature.get("transparentStyle"));
-        e.feature.setStyle(e.feature.get("transparentStyle"));
-      });
-    }
-  };
-
   const typeChangeHandler = (e) => {
     const { layerGroup } = office;
 
@@ -114,121 +90,119 @@ function Controllers() {
     setType(type);
 
     // CLEAR Interactions
-    map.removeInteraction(drawInteraction);
-    map.removeInteraction(snapInteraction);
-    map.removeInteraction(modifyInteraction);
-    map.removeInteraction(selectInteraction);
-    map.removeInteraction(translateInteraction);
+    clearInteractions(map, interactions);
 
-    if (type === "Cursor") {
-      const select = new Select({
-        style: null,
-      });
+    setInteractions([]);
+    switch (type) {
+      case "Cursor":
+        break;
+      case "Hide":
+        const select = new Select({
+          style: null,
+        });
 
-      map.addInteraction(select);
+        select.set("type", type);
 
-      select.on("select", (e) => {
-        const feature = e.selected[0];
+        select.on("select", (e) => {
+          const feature = e.selected[0];
 
-        if (feature?.getGeometry() instanceof Point) return;
-        if (feature) {
-          const style = feature.get("style");
-          const transparentStyle = feature.get("transparentStyle");
-          const showStyle = feature.get("showStyle");
-          if (style === transparentStyle) {
-            feature.setStyle(showStyle);
-            feature.set("style", showStyle);
-          } else if (style === showStyle) {
-            feature.setStyle(transparentStyle);
-            feature.set("style", transparentStyle);
+          if (feature?.getGeometry() instanceof Point) return;
+          if (feature) {
+            const style = feature.get("style");
+            const transparentStyle = feature.get("transparentStyle");
+            const showStyle = feature.get("showStyle");
+            if (style === transparentStyle) {
+              feature.setStyle(showStyle);
+              feature.set("style", showStyle);
+            } else if (style === showStyle) {
+              feature.setStyle(transparentStyle);
+              feature.set("style", transparentStyle);
+            }
           }
-        }
 
-        if (!e.selected[0]) return;
-        select.getFeatures().clear();
-      });
+          if (!e.selected[0]) return;
+          select.getFeatures().clear();
+        });
 
-      setSelectInteraction(select);
-      return;
-    } else if (type === "Edit") {
-      const translate = new Translate();
+        // ADD Interaction
+        map.addInteraction(select);
+        setInteractions((prev) => [...prev, select]);
+        break;
+      case "Move":
+        const translate = new Translate();
 
-      map.addInteraction(translate);
-      setTranslateInteraction(translate);
-    }
-    let draw, snap, modify;
-    // CREATE Interactions
-    if (type === "Edit") snap = createSnap(layerGroup);
-    if (type === "Edit") modify = createModify(layerGroup);
-    if (type !== "Edit") draw = createDraw(layerGroup, type);
+        // ADD Interaction
+        map.addInteraction(translate);
+        setInteractions((prev) => [...prev, translate]);
+        break;
+      case "Edit":
+        const snap = createSnap(layerGroup);
+        const modify = createModify(layerGroup);
 
-    // ADD Interactins to Map
-    if (type === "Edit") map.addInteraction(snap);
-    if (type === "Edit") map.addInteraction(modify);
-    if (type !== "Edit") map.addInteraction(draw);
+        // ADD Interaction
+        map.addInteraction(snap);
+        map.addInteraction(modify);
+        setInteractions((prev) => [...prev, snap, modify]);
+        break;
+      case "Point":
+        const pointDraw = createDraw(layerGroup, type);
 
-    // SAVE Interactions for clear on change
-    if (type === "Edit") setSnapInteraction(snap);
-    if (type === "Edit") setModifyInteraction(modify);
-    if (type !== "Edit") setDrawInteraction(draw);
-
-    if (type !== "Edit") {
-      if (type === "Point") {
-        draw.on("drawstart", (e) => {
+        pointDraw.on("drawstart", (e) => {
           setLastFeature(e.feature);
           setIsModalOpen(true);
-          e.feature.setStyle(
-            new Style({
-              image: new Circle({
-                radius: 7,
-                fill: new Fill({ color }),
-                zIndex: 1,
-              }),
-            })
-          );
+          e.feature.setStyle(pointStyle);
         });
-      } else {
+
+        // ADD Interaction
+        map.addInteraction(pointDraw);
+        setInteractions((prev) => [...prev, pointDraw]);
+        break;
+      default:
+        const draw = createDraw(layerGroup, type);
+
         draw.on("drawstart", (e) => {
           // SAVE Styles for select interaction
-          e.feature.set(
-            "showStyle",
-            new Style({
-              fill: new Fill({ color }),
-              zIndex: 2,
-            })
-          );
-          e.feature.set(
-            "transparentStyle",
-            new Style({
-              fill: new Fill({ color: "rgba(0,0,0,0.2)" }),
-              stroke: new Stroke({ color }),
-              zIndex: 2,
-            })
-          );
+          e.feature.set("showStyle", showStyle);
+          e.feature.set("transparentStyle", transparentStyle);
           e.feature.setStyle(e.feature.get("showStyle"));
         });
+
         draw.on("drawend", (e) => {
           // DEFAULT style
           e.feature.set("style", e.feature.get("transparentStyle"));
           e.feature.setStyle(e.feature.get("transparentStyle"));
           dispatch(addRoom(e.feature));
         });
-      }
+
+        // ADD Interaction
+        map.addInteraction(draw);
+        setInteractions((prev) => [...prev, draw]);
+        break;
     }
   };
 
+  // create new interactions with new layerGroup on office plan change
   useEffect(() => {
     if (selectedOfficeKey) {
-      // CLEAR Interactions
-      map.removeInteraction(drawInteraction);
-      map.removeInteraction(snapInteraction);
-      map.removeInteraction(modifyInteraction);
-      map.removeInteraction(selectInteraction);
-      map.removeInteraction(translateInteraction);
-      setType(null);
+      // Fake event
+      const e = { target: { value: null } };
+      e.target.value = type;
+      typeChangeHandler(e);
     }
     // eslint-disable-next-line
   }, [selectedOfficeKey]);
+
+  useEffect(() => {
+    if (skipFirstColorChange.current) {
+      skipFirstColorChange.current = false;
+    } else {
+      // Fake event
+      const e = { target: { value: null } };
+      e.target.value = type;
+      typeChangeHandler(e);
+    }
+    // eslint-disable-next-line
+  }, [color]);
 
   return (
     <Space className={styles.controllers}>
@@ -238,7 +212,7 @@ function Controllers() {
           content={
             <RgbaStringColorPicker
               color={color}
-              onChange={colorChangeHandler}
+              onChange={(value) => setColor(value)}
             />
           }
         >
@@ -254,10 +228,20 @@ function Controllers() {
           </Space>
         </Popover>
       </Tooltip>
-      <Radio.Group value={type} onChange={typeChangeHandler}>
+      <Radio.Group defaultValue={"Cursor"} onChange={typeChangeHandler}>
         <Radio.Button value="Cursor">
+          <Tooltip title="İmleç">
+            <RxCursorArrow />
+          </Tooltip>
+        </Radio.Button>
+        <Radio.Button value="Hide">
           <Tooltip title="Oda Göster/Gizle">
             <EyeInvisibleOutlined />
+          </Tooltip>
+        </Radio.Button>
+        <Radio.Button value="Move">
+          <Tooltip title="Hareket Ettir">
+            <RxHand />
           </Tooltip>
         </Radio.Button>
         <Radio.Button value="Edit">

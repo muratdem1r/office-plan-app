@@ -1,5 +1,8 @@
 // Openlayers
 import { Point } from "ol/geom";
+import { Select } from "ol/interaction";
+
+import eyePng from "assets/images/eye.png";
 
 export const mapPointerMove = ({ map, popup, popupRef }) => {
   map.on("pointermove", (e) => {
@@ -20,8 +23,15 @@ export const mapPointerMove = ({ map, popup, popupRef }) => {
 
           popup.setPosition(coord);
         }
+      } else {
+        map.getInteractions().forEach((interaction) => {
+          if (interaction instanceof Select) {
+            if (interaction.get("type") === "Hide") {
+              map.getTargetElement().style.cursor = `url("${eyePng}") , auto`;
+            }
+          }
+        });
       }
-      map.getTargetElement().style.cursor = "pointer";
     });
   });
 };
