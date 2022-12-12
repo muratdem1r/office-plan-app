@@ -4,13 +4,13 @@ import { useSelector } from "react-redux";
 // Listeners
 import { mapPointerMove } from "map/listeners/pointermove";
 
-function useMapEvents({ popup, featureNameRef, featureTitleRef }) {
+function useMapEvents({ popup, popupRef }) {
   const { map } = useSelector((state) => state);
 
   useEffect(() => {
     if (map) {
       // Map Event Listeners
-      mapPointerMove({ map, popup, featureNameRef, featureTitleRef });
+      mapPointerMove({ map, popup, popupRef });
     }
   }, [map]);
 

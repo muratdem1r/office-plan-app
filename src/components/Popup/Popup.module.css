@@ -36,10 +36,10 @@
     margin-left: -11px;
 }
 
-#feature_name {
+.overlay_text:first-child {
     font-weight: bold;
 }
 
-#feature_title {
+.overlay_text:last-child {
     font-style: italic;
 }

@@ -1,12 +1,7 @@
 // Openlayers
 import { Point } from "ol/geom";
 
-export const mapPointerMove = ({
-  map,
-  popup,
-  featureNameRef,
-  featureTitleRef,
-}) => {
+export const mapPointerMove = ({ map, popup, popupRef }) => {
   map.on("pointermove", (e) => {
     popup.setPosition(undefined);
     map.getTargetElement().style.cursor = "";
@@ -20,8 +15,8 @@ export const mapPointerMove = ({
         const title = feature.get("title");
 
         if (name) {
-          featureNameRef.current.innerHTML = name + "<br>";
-          featureTitleRef.current.innerHTML = title;
+          popupRef.current.children["popup-name"].innerHTML = name + "<br>";
+          popupRef.current.children["popup-title"].innerHTML = title;
 
           popup.setPosition(coord);
         }

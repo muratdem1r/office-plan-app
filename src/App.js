@@ -27,8 +27,6 @@ function App() {
   const [info, infoHolder] = notification.useNotification();
 
   const popupRef = useRef();
-  const featureNameRef = useRef();
-  const featureTitleRef = useRef();
 
   useEffect(() => {
     // save antd notification to redux
@@ -39,24 +37,10 @@ function App() {
   return (
     <div className="App">
       {infoHolder}
-      <Popup
-        popup={popup}
-        popupRef={popupRef}
-        featureNameRef={featureNameRef}
-        featureTitleRef={featureTitleRef}
-      />
-
+      <Popup popup={popup} popupRef={popupRef} />
       <OfficeName />
-      <Controllers
-        popup={popup}
-        featureNameRef={featureNameRef}
-        featureTitleRef={featureTitleRef}
-      />
-      <MapWrapper
-        popup={popup}
-        featureNameRef={featureNameRef}
-        featureTitleRef={featureTitleRef}
-      />
+      <Controllers />
+      <MapWrapper popup={popup} popupRef={popupRef} />
       <MapPanel />
     </div>
   );

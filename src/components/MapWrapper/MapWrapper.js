@@ -6,11 +6,11 @@ import styles from "./MapWrapper.module.css";
 import useCreateMap from "map/hooks/useCreateMap";
 import useMapEvents from "map/hooks/useMapEvents";
 
-function MapWrapper({ popup, featureNameRef, featureTitleRef }) {
+function MapWrapper({ popup, popupRef }) {
   const mapRef = useRef();
 
   useCreateMap(mapRef);
-  useMapEvents({ popup, featureNameRef, featureTitleRef });
+  useMapEvents({ popup, popupRef });
 
   return <div ref={mapRef} className={styles.map}></div>;
 }

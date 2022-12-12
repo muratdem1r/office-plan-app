@@ -47,9 +47,9 @@ const members = [
   },
   {
     name: "Serhat Koçhan",
-    title: "Professional Senior Everything Developer",
+    title: "Frontend Developer",
     image: serhat_kochan,
-    coords: [386, 49.5],
+    coords: [280, 150.5],
   },
   {
     name: "Tarık Tosya",
