@@ -12,3 +12,17 @@
 
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+.radio_button {
+    border: 1px solid #d9d9d9;
+    border-block-start-width: 1.02px;
+    border-inline-start-width: 0;
+    border-inline-end-width: 1px;
+    cursor: default;
+    border-radius: 0;
+}
+
+/* Override antd button */
+.radio_button:not(:disabled):hover {
+    border-color: #d9d9d9;
+}

@@ -1,5 +1,6 @@
 import {
   Button,
+  Dropdown,
   Form,
   Input,
   Modal,
@@ -15,26 +16,35 @@ import {
   EditOutlined,
   UserAddOutlined,
   EyeInvisibleOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { RxCursorArrow, RxHand } from "react-icons/rx";
 
+// Styles
 import styles from "./Controllers.module.css";
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Fill, Stroke, Circle, Style } from "ol/style";
 
-import { createDraw } from "map/interactions/createDraw";
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RgbaStringColorPicker } from "react-colorful";
+
+// Openlayers
 import { Select } from "ol/interaction";
 import Translate from "ol/interaction/Translate";
-import { useEffect } from "react";
-import { addRoom } from "store/actions/mapActions";
-import useFindBySelectedKey from "map/hooks/useFindBySelectedKey";
+import { Point } from "ol/geom";
+
+// Interactions
+import { createDraw } from "map/interactions/createDraw";
 import { createSnap } from "map/interactions/createSnap";
 import { createModify } from "map/interactions/createModify";
 
-import { Fill, Stroke, Circle, Style } from "ol/style";
+// Actions
+import { addRoom } from "store/actions/mapActions";
 
-import { RgbaStringColorPicker } from "react-colorful";
-import { Point } from "ol/geom";
+// Custom Hooks
+import useFindBySelectedKey from "map/hooks/useFindBySelectedKey";
+
+// Helpers
 import clearInteractions from "map/helpers/clearInteractions";
 
 function Controllers() {
@@ -204,6 +214,39 @@ function Controllers() {
     // eslint-disable-next-line
   }, [color]);
 
+  const roomItems = [
+    {
+      key: "1",
+      label: (
+        <Tooltip placement="left" title="Poligon">
+          <Radio.Button value="Polygon">
+            <ShareAltOutlined />
+          </Radio.Button>
+        </Tooltip>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Tooltip placement="left" title="Kare">
+          <Radio.Button value="Square">
+            <BorderOutlined />
+          </Radio.Button>
+        </Tooltip>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <Tooltip placement="left" title="Daire">
+          <Radio.Button value="Circle">
+            <Loading3QuartersOutlined />
+          </Radio.Button>
+        </Tooltip>
+      ),
+    },
+  ];
+
   return (
     <Space className={styles.controllers}>
       <Tooltip title="Oda Rengi">
@@ -229,46 +272,47 @@ function Controllers() {
         </Popover>
       </Tooltip>
       <Radio.Group defaultValue={"Cursor"} onChange={typeChangeHandler}>
-        <Radio.Button value="Cursor">
-          <Tooltip title="İmleç">
-            <RxCursorArrow />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Hide">
-          <Tooltip title="Oda Göster/Gizle">
-            <EyeInvisibleOutlined />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Move">
-          <Tooltip title="Hareket Ettir">
-            <RxHand />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Edit">
-          <Tooltip title="Düzenle">
+        <Tooltip title="İmleç">
+          <Radio.Button value="Cursor">
+            <RxCursorArrow className="anticon" />
+          </Radio.Button>
+        </Tooltip>
+
+        <Tooltip title="Düzenle">
+          <Radio.Button value="Edit">
             <EditOutlined />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Polygon">
-          <Tooltip title="Poligon">
-            <ShareAltOutlined />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Square">
-          <Tooltip title="Kare">
-            <BorderOutlined />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Circle">
-          <Tooltip title="Daire">
-            <Loading3QuartersOutlined />
-          </Tooltip>
-        </Radio.Button>
-        <Radio.Button value="Point">
-          <Tooltip title="Çalışan Ekle">
+          </Radio.Button>
+        </Tooltip>
+
+        <Tooltip title="Hareket Ettir">
+          <Radio.Button value="Move">
+            <RxHand className="anticon" />
+          </Radio.Button>
+        </Tooltip>
+
+        <Tooltip title="Oda Göster/Gizle">
+          <Radio.Button value="Hide">
+            <EyeInvisibleOutlined />
+          </Radio.Button>
+        </Tooltip>
+
+        <Tooltip placement="left" title="Oda Ekle">
+          <Dropdown
+            menu={{
+              items: roomItems,
+            }}
+          >
+            <Button className={styles.radio_button}>
+              <HomeOutlined />
+            </Button>
+          </Dropdown>
+        </Tooltip>
+
+        <Tooltip title="Çalışan Ekle">
+          <Radio.Button value="Point">
             <UserAddOutlined />
-          </Tooltip>
-        </Radio.Button>
+          </Radio.Button>
+        </Tooltip>
       </Radio.Group>
 
       <Modal
