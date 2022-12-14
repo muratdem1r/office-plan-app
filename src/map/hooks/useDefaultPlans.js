@@ -32,7 +32,8 @@ function useDefaultPlans() {
         });
       }
     });
-  }, [dispatch]);
+    // eslint-disable-next-line
+  }, []);
   return;
 }
 

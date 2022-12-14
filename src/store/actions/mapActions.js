@@ -8,7 +8,7 @@ import {
 
 // Helpers
 import { createView } from "map/helpers/createView";
-import { findObj } from "map/helpers/findObj";
+import { findObj, findObjAndRemove } from "map/helpers/findObj";
 
 export const newMap = (map) => (dispatch) => {
   dispatch({ type: SET_MAP, payload: map });
@@ -21,18 +21,33 @@ const setSelectedOfficeKey = (key) => (dispatch) => {
 // CREATE Floor
 export const addFloor = () => (dispatch, getState) => {
   const { treeData } = getState();
+
   const lastIndex = treeData.length - 1;
-  const newFloor = (parseInt(treeData[lastIndex].key) + 1).toString();
-  const newTitle = `Kat ${newFloor}`;
+  let newFloor, newTitle;
+
+  if (lastIndex < 0) {
+    newFloor = "0";
+    newTitle = "Zemin";
+  } else {
+    newFloor = (parseInt(treeData[lastIndex].key) + 1).toString();
+    newTitle = `Kat ${newFloor}`;
+  }
+
   const newNode = { title: newTitle, key: newFloor, children: [] };
 
   treeData.push(newNode);
   dispatch({ type: UPDATE_TREE, payload: treeData });
 };
 
+/**
+ *
+ * PLAN
+ *
+ */
+
 // CREATE Plan
 export const addPlan =
-  ({ layerGroup, extent, name, floor }) =>
+  ({ layerGroup, extent, name, floor, isChangePlan = true }) =>
   (dispatch, getState) => {
     try {
       const { map, treeData } = getState();
@@ -84,14 +99,19 @@ export const addPlan =
 
 // CHANGE Plan
 export const changePlan = (key) => (dispatch, getState) => {
+  if (!key) {
+    dispatch(setSelectedOfficeKey(null));
+    return;
+  }
+
   const { map, treeData, selectedOfficeKey } = getState();
   const { layerGroup, extent } = findObj(treeData, key);
 
   try {
     // Make old layer unvisible
     if (selectedOfficeKey) {
-      const { layerGroup } = findObj(treeData, selectedOfficeKey);
-      layerGroup.setVisible(false);
+      const result = findObj(treeData, selectedOfficeKey);
+      result?.layerGroup.setVisible(false);
     }
     // Make new layer visible
     layerGroup.setVisible(true);
@@ -105,7 +125,42 @@ export const changePlan = (key) => (dispatch, getState) => {
     console.log(error);
   }
 };
+export const removePlan = (key) => (dispatch, getState) => {
+  const { treeData, map } = getState();
 
+  const { updatedTreeData, plan } = findObjAndRemove(treeData, key);
+
+  // UPDATE treeData
+  dispatch({ type: UPDATE_TREE, payload: updatedTreeData });
+  map.removeLayer(plan.layerGroup);
+
+  return plan;
+};
+
+export const movePlan = (key, destinationKey) => (dispatch, getState) => {
+  const plan = dispatch(removePlan(key));
+  const { layerGroup, extent, name } = plan;
+
+  dispatch(
+    addPlan({
+      layerGroup,
+      extent,
+      name,
+      floor: destinationKey,
+    })
+  );
+
+  plan.children.forEach((child) => {
+    const feature = child.feature;
+    dispatch(addRoom(feature));
+  });
+};
+
+/**
+ *
+ * ROOM
+ *
+ */
 export const addRoom = (feature) => (dispatch, getState) => {
   const { treeData, selectedOfficeKey } = getState();
 
@@ -143,16 +198,19 @@ export const addRoom = (feature) => (dispatch, getState) => {
     });
   });
 };
-export const addEmployee = (room, feature) => (dispatch, getState) => {
-  const { treeData, selectedOfficeKey } = getState();
 
-  treeData.forEach((data) => {
-    data.children.forEach((office) => {
-      if (office.key === selectedOfficeKey) {
-        console.log(office);
-      }
-    });
-  });
+export const removeRoom = (key) => (dispatch, getState) => {
+  const { treeData } = getState();
+
+  const parentKey = key.slice(0, 3);
+  const { layerGroup } = findObj(treeData, parentKey);
+  const vectorSource = layerGroup.getLayers().item(1).getSource();
+
+  const { updatedTreeData, plan } = findObjAndRemove(treeData, key);
+
+  // UPDATE treeData
+  dispatch({ type: UPDATE_TREE, payload: updatedTreeData });
+  vectorSource.removeFeature(plan.feature);
 };
 
 // SET Notification for antd notification

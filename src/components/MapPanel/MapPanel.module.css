@@ -7,3 +7,13 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: white;
 }
+
+.deleteInfo {
+    margin: 0;
+    opacity: 0.5;
+}
+
+.alert {
+    color: brown;
+    font-weight: bold;
+}

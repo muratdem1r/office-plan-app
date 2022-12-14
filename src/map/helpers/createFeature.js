@@ -5,18 +5,6 @@ import { Icon, Style } from "ol/style";
 import { fromLonLat } from "ol/proj";
 import { transform } from "ol/proj";
 
-export const createPointFeature = (coords) => {
-  // Transform coord
-  const transformedCoord = transform(coords, "EPSG:3857", "EPSG:4326");
-
-  // Create new feature
-  const feature = new Feature({
-    geometry: new Point(fromLonLat(transformedCoord)),
-  });
-
-  return feature;
-};
-
 export const createAvatarFeature = (coords, image, name, title) => {
   // Transform coord
   const transformedCoord = transform(coords, "EPSG:3857", "EPSG:4326");

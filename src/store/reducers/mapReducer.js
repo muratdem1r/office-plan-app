@@ -4,13 +4,13 @@ const initialState = {
   selectedOfficeKey: null,
   treeData: [
     {
-      title: "Kat 1",
-      key: "1",
+      title: "Zemin",
+      key: "0",
       children: [],
     },
     {
-      title: "Kat 2",
-      key: "2",
+      title: "Kat 1",
+      key: "1",
       children: [],
     },
   ],

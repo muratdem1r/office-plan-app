@@ -33,6 +33,7 @@ function useCreateMap({ popup, popupRef }) {
 
     // Overlays
     map.addOverlay(popup);
+
     // eslint-disable-next-line
   }, []);
 

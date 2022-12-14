@@ -1,32 +1,17 @@
+import { Button, Dropdown, Radio, Space, Tooltip } from "antd";
 import {
-  Button,
-  Dropdown,
-  Form,
-  Input,
-  Modal,
-  Popover,
-  Radio,
-  Space,
-  Tooltip,
-} from "antd";
-import {
-  ShareAltOutlined,
-  BorderOutlined,
-  Loading3QuartersOutlined,
   EditOutlined,
-  UserAddOutlined,
   EyeInvisibleOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
 import { RxCursorArrow, RxHand } from "react-icons/rx";
 
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 // Styles
 import styles from "./Controllers.module.css";
 import { Fill, Stroke, Circle, Style } from "ol/style";
-
-import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RgbaStringColorPicker } from "react-colorful";
 
 // Openlayers
 import { Select } from "ol/interaction";
@@ -47,6 +32,11 @@ import useFindBySelectedKey from "map/hooks/useFindBySelectedKey";
 // Helpers
 import clearInteractions from "map/helpers/clearInteractions";
 
+// Components
+import NewEmployeeForm from "./NewEmployeeForm";
+import ColorPicker from "./ColorPicker";
+import roomItems from "./roomItems";
+
 function Controllers() {
   const dispatch = useDispatch();
   const { selectedOfficeKey, map } = useSelector((state) => state);
@@ -55,10 +45,9 @@ function Controllers() {
   const [type, setType] = useState("Cursor");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastFeature, setLastFeature] = useState(null);
-
   const [interactions, setInteractions] = useState([]);
-
   const [color, setColor] = useState("#ffcc33");
+
   const skipFirstColorChange = useRef(true);
 
   const pointStyle = new Style({
@@ -71,6 +60,7 @@ function Controllers() {
 
   const showStyle = new Style({
     fill: new Fill({ color }),
+    stroke: new Stroke({ color }),
     zIndex: 2,
   });
 
@@ -79,19 +69,6 @@ function Controllers() {
     stroke: new Stroke({ color }),
     zIndex: 2,
   });
-
-  const formSubmitHandler = ({ name, title }) => {
-    lastFeature.set("name", name);
-    lastFeature.set("title", title);
-
-    setIsModalOpen(false);
-  };
-
-  const cancelFormHandler = () => {
-    const { layerGroup } = office;
-    layerGroup.getLayers().array_[1].getSource().removeFeature(lastFeature);
-    setIsModalOpen(false);
-  };
 
   const typeChangeHandler = (e) => {
     const { layerGroup } = office;
@@ -214,63 +191,9 @@ function Controllers() {
     // eslint-disable-next-line
   }, [color]);
 
-  const roomItems = [
-    {
-      key: "1",
-      label: (
-        <Tooltip placement="left" title="Poligon">
-          <Radio.Button value="Polygon">
-            <ShareAltOutlined />
-          </Radio.Button>
-        </Tooltip>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <Tooltip placement="left" title="Kare">
-          <Radio.Button value="Square">
-            <BorderOutlined />
-          </Radio.Button>
-        </Tooltip>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <Tooltip placement="left" title="Daire">
-          <Radio.Button value="Circle">
-            <Loading3QuartersOutlined />
-          </Radio.Button>
-        </Tooltip>
-      ),
-    },
-  ];
-
   return (
     <Space className={styles.controllers}>
-      <Tooltip title="Oda Rengi">
-        <Popover
-          trigger="click"
-          content={
-            <RgbaStringColorPicker
-              color={color}
-              onChange={(value) => setColor(value)}
-            />
-          }
-        >
-          <Space style={{ cursor: "pointer" }}>
-            <div
-              style={{
-                backgroundColor: color,
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-              }}
-            />
-          </Space>
-        </Popover>
-      </Tooltip>
+      <ColorPicker color={color} setColor={setColor} />
       <Radio.Group defaultValue={"Cursor"} onChange={typeChangeHandler}>
         <Tooltip title="İmleç">
           <Radio.Button value="Cursor">
@@ -308,71 +231,13 @@ function Controllers() {
           </Dropdown>
         </Tooltip>
 
-        <Tooltip title="Çalışan Ekle">
-          <Radio.Button value="Point">
-            <UserAddOutlined />
-          </Radio.Button>
-        </Tooltip>
+        <NewEmployeeForm
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          lastFeature={lastFeature}
+          office={office}
+        />
       </Radio.Group>
-
-      <Modal
-        title="Yeni Çalışan"
-        open={isModalOpen}
-        footer={null}
-        onCancel={cancelFormHandler}
-      >
-        <Form
-          labelCol={{
-            span: 7,
-          }}
-          wrapperCol={{
-            span: 12,
-          }}
-          layout="horizontal"
-          initialValues={{
-            size: "large",
-          }}
-          size="large"
-          onFinish={formSubmitHandler}
-          validateMessages={{
-            required: "Zorunlu alan.",
-          }}
-        >
-          <Form.Item
-            name="name"
-            label="Çalışan Adı"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="title"
-            label="Görevi"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            wrapperCol={{
-              offset: 8,
-              span: 16,
-            }}
-          >
-            <Button type="primary" htmlType="submit">
-              Kaydet
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
     </Space>
   );
 }

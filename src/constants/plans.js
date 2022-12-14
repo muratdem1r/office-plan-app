@@ -21,13 +21,13 @@ const plans = [
     layerGroup: ortem.layerGroup,
     extent: ortem.extent,
     name: "ortem",
-    floor: "2",
+    floor: "1",
   },
   {
     layerGroup: mahrek.layerGroup,
     extent: mahrek.extent,
     name: "mahrek",
-    floor: "1",
+    floor: "0",
   },
 ];
 
