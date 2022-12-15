@@ -13,6 +13,11 @@ const initialState = {
       key: "1",
       children: [],
     },
+    {
+      title: "Kat 2",
+      key: "2",
+      children: [],
+    },
   ],
 };
 

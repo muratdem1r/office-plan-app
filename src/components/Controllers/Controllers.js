@@ -54,6 +54,7 @@ function Controllers() {
     image: new Circle({
       radius: 7,
       fill: new Fill({ color }),
+      stroke: new Stroke({ color, width: 20 }),
       zIndex: 1,
     }),
   });
@@ -135,6 +136,7 @@ function Controllers() {
         const pointDraw = createDraw(layerGroup, type);
 
         pointDraw.on("drawstart", (e) => {
+          console.log(e.feature.getGeometry().getCoordinates());
           setLastFeature(e.feature);
           setIsModalOpen(true);
           e.feature.setStyle(pointStyle);
@@ -158,6 +160,7 @@ function Controllers() {
           // DEFAULT style
           e.feature.set("style", e.feature.get("transparentStyle"));
           e.feature.setStyle(e.feature.get("transparentStyle"));
+
           dispatch(addRoom(e.feature));
         });
 

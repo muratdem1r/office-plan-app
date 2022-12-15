@@ -78,8 +78,8 @@ function MapPanel() {
         <NewFloorButton />
         <NewOfficeForm />
         <p className={styles.deleteInfo}>
-          Press right click <br />
-          for <span className={styles.alert}>DELETE</span>
+          <span className={styles.alert}>SİLMEK</span> için sağ <br />
+          tıklayın.
         </p>
       </Space>
     </div>

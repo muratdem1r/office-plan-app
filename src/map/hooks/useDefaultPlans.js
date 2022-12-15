@@ -9,7 +9,8 @@ import members from "constants/members";
 import { addPlan } from "store/actions/mapActions";
 
 // Helpers
-import { createAvatarFeature } from "map/helpers/createFeature";
+import { createFeature } from "map/helpers/createFeature";
+import yemeksepetiMembers from "constants/yemeksepetiMembers";
 
 function useDefaultPlans() {
   const dispatch = useDispatch();
@@ -22,7 +23,30 @@ function useDefaultPlans() {
       if (plan.name === "mahrek") {
         members.forEach((member) => {
           const { coords, image, name, title } = member;
-          const newFeature = createAvatarFeature(coords, image, name, title);
+          const newFeature = createFeature({
+            coords,
+            image,
+            name,
+            title,
+          });
+
+          plan.layerGroup
+            .getLayers()
+            .item(1)
+            .getSource()
+            .addFeature(newFeature);
+        });
+      }
+      // Add features to yemeksepeti
+      else if (plan.name === "yemeksepeti") {
+        yemeksepetiMembers.forEach((member) => {
+          const { coords, color, name, title } = member;
+          const newFeature = createFeature({
+            coords,
+            color,
+            name,
+            title,
+          });
 
           plan.layerGroup
             .getLayers()
